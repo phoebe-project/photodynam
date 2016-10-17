@@ -1,11 +1,11 @@
 /*
   Wrappers for Josh Carter's libphotodynam routines
-  
+
   Need to install for Python.h header:
     apt-get install python-dev
 
-  Author: 
-    Kyle Conroy, 
+  Author:
+    Kyle Conroy,
     Martin Horvat, October 2016
 */
 
@@ -30,7 +30,7 @@
   #define PyString_Type PyBytes_Type
   #define PyString_AsString PyBytes_AsString
   #define PyString_Check PyBytes_Check
-  
+
 #else
   #define MOD_ERROR_VAL
   #define MOD_SUCCESS_VAL(val)
@@ -43,7 +43,7 @@
 #include "n_body.h"
 
 static PyObject *kep2cartesian(PyObject *self, PyObject *args) {
-  
+
   // printf("entered: kep2cartesian\n");
   // parse input arguments
   PyObject *mass_o, *a_o, *e_o, *inc_o, *om_o, *ln_o, *ma_o;
@@ -118,21 +118,21 @@ static PyObject *kep2cartesian(PyObject *self, PyObject *args) {
 
 
 static PyObject *do_dynamics(PyObject *self, PyObject *args) {
-  
+
   //~ printf("entered: do_dynamics\n");
   // parse input arguments
-  
+
   PyObject *mass_o, *a_o, *e_o, *inc_o, *om_o, *ln_o, *ma_o, *times_o;
-  
+
   double *mass, *a, *e, *inc, *om, *ln, *ma, *times, *mj;
-  
+
   int Nobjects, Ntimes, i, j, ltte, return_keplerian;
-  
+
   double t0, maxh, orbit_error;
 
   //~ printf("parsing arguments...\n");
-  if (!PyArg_ParseTuple(args, "OOOOOOOOdddii", 
-        &times_o, &mass_o, &a_o, &e_o, &inc_o, &om_o, &ln_o, 
+  if (!PyArg_ParseTuple(args, "OOOOOOOOdddii",
+        &times_o, &mass_o, &a_o, &e_o, &inc_o, &om_o, &ln_o,
         &ma_o, &t0, &maxh, &orbit_error, &ltte, &return_keplerian)
       )
       return NULL;
@@ -164,10 +164,10 @@ static PyObject *do_dynamics(PyObject *self, PyObject *args) {
     ln[i] = PyFloat_AsDouble(PyTuple_GetItem(ln_o, i));
     ma[i] = PyFloat_AsDouble(PyTuple_GetItem(ma_o, i));
   }
-  
+
   for (i = 0; i < Ntimes; i++)
     times[i] = PyFloat_AsDouble(PyTuple_GetItem(times_o, i));
-  
+
 
   // initialize output
   //~ printf("initializing output...\n");
@@ -301,18 +301,18 @@ static char const *Docstring =
 
 
 /* module initialization */
-MOD_INIT(libphotodynam) {
-  
+MOD_INIT(photodynam) {
+
   PyObject *backend;
-  
-  MOD_DEF(backend, "libphotodynam", Docstring, Methods)
+
+  MOD_DEF(backend, "photodynam", Docstring, Methods)
 
   if (!backend) return MOD_ERROR_VAL;
-    
+
   // Added to handle Numpy arrays
-  // Ref: 
+  // Ref:
   // * http://docs.scipy.org/doc/numpy-1.10.1/user/c-info.how-to-extend.html
   import_array();
-  
+
   return MOD_SUCCESS_VAL(backend);
 }
