@@ -10,9 +10,9 @@ CXXFLAGS+=$(shell python-config --includes)
 LDFLAGS+=$(shell python-config --ldflags)
 endif
 
-LIBP=libphotodynam
+LIBP=photodynam
 
 all: $(LIBP).so
 
-$(LIBP).so: $(LIBP).cpp ../include/*.h
-	$(CXX)  -fPIC -shared $(LIBP).cpp -o $(LIBP).so $(CXXFLAGS) $(LDFLAGS)
+$(LIBP).so: lib$(LIBP).cpp ../include/*.h
+	$(CXX)  -fPIC -shared lib$(LIBP).cpp -o $(LIBP).so $(CXXFLAGS) $(LDFLAGS)

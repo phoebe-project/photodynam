@@ -389,4 +389,12 @@ void NBodyState::getL(double * lx, double * ly, double * lz) {
   }
 }
 
+#undef COPYN
+#undef COPYN3
+#undef CC
+
+#undef A3
+#undef A3P
+#undef NORM2
+#undef NORM_DIFF 
 #endif
