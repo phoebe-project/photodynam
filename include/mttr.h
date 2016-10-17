@@ -1,3 +1,6 @@
+#if !defined(_mttr_h)
+#define _mttr_h
+
 /*****************************************************************************/
 /* mttr.c								     */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -6,28 +9,15 @@
 /* (c) 2011; Pal, A. (apal@szofi.net)					     */
 /*****************************************************************************/
 
-#include <stdio.h> 
+#include <cstdio> 
 #include <iostream>
-#include <string.h> 
-#include <memory.h> 
-#include <stdlib.h> 
-#include <math.h> 
-
-//#ifndef MTTR_TEST_EXECUTABLE		/* we do not need lfit.h for testing */
-//#include <lfit/lfit.h> 
-//#endif
-
-#ifdef  NBRV_TEST_EXECUTABLE 
-#define STATIC 
-#else 
-#define STATIC  static 
-#endif 
+#include <cstring> 
+#include <cstdlib> 
+#include <cmath> 
 
 #include "icirc.h"
 #include "scpolyint.h"
 #include "elliptic.h"
-
-using namespace std;
 
 /*****************************************************************************/
 
@@ -73,10 +63,10 @@ double mttr_integral_primitive(double r,double c,double x)
 	iret -= 1.0/3.0*w*(r+c)*(q2-d2)*M_PI/(2*q2*sqrt(q2));
 
  if (rj != rj) {
-   cout << "NAN in MTTR" << endl;
+   std::cout << "NAN in MTTR" << std::endl;
  }
 
- return(iret);
+ return iret;
 }
 
 double mttr_integral_definite(double r,double c,double x0,double dx)
@@ -90,7 +80,7 @@ double mttr_integral_definite(double r,double c,double x0,double dx)
 	else /* this case implies r==1: */
 		ret=dx/3.0;
 
-	return(ret);
+	return ret;
   }
 
  if ( dx<0.0 )
@@ -112,7 +102,7 @@ double mttr_integral_definite(double r,double c,double x0,double dx)
 	dx-=dc;
   }
  
- return(ret); 
+ return ret; 
 }
 
 /*****************************************************************************/
@@ -124,8 +114,6 @@ double mttr_flux_general(circle *circles,int ncircle,double c0,double c1,double 
  double	fc,f0;
 
  icirc_arclist_intersections(circles,ncircle,&arcs,&narc); 
-
- 
 
  fc=0.0;
 
@@ -262,9 +250,8 @@ double mttr_flux(double x1,double y1,double r1,double x2,double y2,double r2,dou
 	return(0.0);
 }
 
-#ifndef MTTR_TEST_EXECUTABLE
 
-STATIC double mf1u(double x1,double y1,double r1)
+double mf1u(double x1,double y1,double r1)
 {
  circle	circles[2];
  circles[0].x0=0.0,circles[0].y0=0.0,circles[0].r =1.0;
@@ -272,7 +259,7 @@ STATIC double mf1u(double x1,double y1,double r1)
  return(mttr_flux_general(circles,2,1.0,0.0,0.0));
 }
 
-STATIC double mf1l(double x1,double y1,double r1,double cl)
+double mf1l(double x1,double y1,double r1,double cl)
 {
  circle	circles[2];
  circles[0].x0=0.0,circles[0].y0=0.0,circles[0].r =1.0;
@@ -280,7 +267,7 @@ STATIC double mf1l(double x1,double y1,double r1,double cl)
  return(mttr_flux_general(circles,2,1-cl,cl,0.0));
 }
 
-STATIC double mf1q(double x1,double y1,double r1,double g1,double g2)
+double mf1q(double x1,double y1,double r1,double g1,double g2)
 {
  circle	circles[2];
  circles[0].x0=0.0,circles[0].y0=0.0,circles[0].r =1.0;
@@ -288,7 +275,7 @@ STATIC double mf1q(double x1,double y1,double r1,double g1,double g2)
  return(mttr_flux_general(circles,2,1-g1-2*g2,g1+2*g2,g2));
 }
 
-STATIC double mf1s(double x1,double y1,double r1,double s)
+double mf1s(double x1,double y1,double r1,double s)
 {
  circle	circles[2];
  circles[0].x0=0.0,circles[0].y0=0.0,circles[0].r =1.0;
@@ -296,7 +283,7 @@ STATIC double mf1s(double x1,double y1,double r1,double s)
  return(mttr_flux_general(circles,2,1,0.0,-s));
 }
 
-STATIC double mf2u(double x1,double y1,double r1,double x2,double y2,double r2)
+double mf2u(double x1,double y1,double r1,double x2,double y2,double r2)
 {
  circle	circles[3];
  circles[0].x0=0.0,circles[0].y0=0.0,circles[0].r =1.0;
@@ -305,7 +292,7 @@ STATIC double mf2u(double x1,double y1,double r1,double x2,double y2,double r2)
  return(mttr_flux_general(circles,3,1.0,0.0,0.0));
 }
 
-STATIC double mf2l(double x1,double y1,double r1,double x2,double y2,double r2,double cl)
+double mf2l(double x1,double y1,double r1,double x2,double y2,double r2,double cl)
 {
  circle	circles[3];
  circles[0].x0=0.0,circles[0].y0=0.0,circles[0].r =1.0;
@@ -314,7 +301,7 @@ STATIC double mf2l(double x1,double y1,double r1,double x2,double y2,double r2,d
  return(mttr_flux_general(circles,2,1-cl,cl,0.0));
 }
 
-STATIC double mf2q(double x1,double y1,double r1,double x2,double y2,double r2,double g1,double g2)
+double mf2q(double x1,double y1,double r1,double x2,double y2,double r2,double g1,double g2)
 {
  circle	circles[3];
  circles[0].x0=0.0,circles[0].y0=0.0,circles[0].r =1.0;
@@ -323,7 +310,7 @@ STATIC double mf2q(double x1,double y1,double r1,double x2,double y2,double r2,d
  return(mttr_flux_general(circles,2,1-g1-2*g2,g1+2*g2,g2));
 }
 
-STATIC double mf2s(double x1,double y1,double r1,double x2,double y2,double r2,double s)
+double mf2s(double x1,double y1,double r1,double x2,double y2,double r2,double s)
 {
  circle	circles[3];
  circles[0].x0=0.0,circles[0].y0=0.0,circles[0].r =1.0;
@@ -332,7 +319,7 @@ STATIC double mf2s(double x1,double y1,double r1,double x2,double y2,double r2,d
  return(mttr_flux_general(circles,2,1,0.0,-s));
 }
 
-STATIC int mttr_funct_flux(double *vars,double *idvs,double *ret,double *diff)
+int mttr_funct_flux(double *vars,double *idvs,double *ret,double *diff)
 {
  double	r;
 
@@ -356,7 +343,7 @@ STATIC int mttr_funct_flux(double *vars,double *idvs,double *ret,double *diff)
  return(0);
 }
 
-STATIC int lmf1u(double *vars,double *idvs,double *ret,double *diff)
+int lmf1u(double *vars,double *idvs,double *ret,double *diff)
 {
  double	r;
 
@@ -376,7 +363,7 @@ STATIC int lmf1u(double *vars,double *idvs,double *ret,double *diff)
  return(0);
 }
 
-STATIC int lmf1l(double *vars,double *idvs,double *ret,double *diff)
+int lmf1l(double *vars,double *idvs,double *ret,double *diff)
 {
  double	r;
 
@@ -396,7 +383,7 @@ STATIC int lmf1l(double *vars,double *idvs,double *ret,double *diff)
  return(0);
 }
 
-STATIC int lmf1s(double *vars,double *idvs,double *ret,double *diff)
+int lmf1s(double *vars,double *idvs,double *ret,double *diff)
 {
  double	r;
 
@@ -416,7 +403,7 @@ STATIC int lmf1s(double *vars,double *idvs,double *ret,double *diff)
  return(0);
 }
 
-STATIC int lmf1q(double *vars,double *idvs,double *ret,double *diff)
+int lmf1q(double *vars,double *idvs,double *ret,double *diff)
 {
  double	r;
 
@@ -436,7 +423,7 @@ STATIC int lmf1q(double *vars,double *idvs,double *ret,double *diff)
  return(0);
 }
 
-STATIC int lmf2u(double *vars,double *idvs,double *ret,double *diff)
+int lmf2u(double *vars,double *idvs,double *ret,double *diff)
 {
  double	r;
 
@@ -460,7 +447,7 @@ STATIC int lmf2u(double *vars,double *idvs,double *ret,double *diff)
  return(0);
 }
 
-STATIC int lmf2l(double *vars,double *idvs,double *ret,double *diff)
+int lmf2l(double *vars,double *idvs,double *ret,double *diff)
 {
  double	r;
 
@@ -484,7 +471,7 @@ STATIC int lmf2l(double *vars,double *idvs,double *ret,double *diff)
  return(0);
 }
 
-STATIC int lmf2q(double *vars,double *idvs,double *ret,double *diff)
+int lmf2q(double *vars,double *idvs,double *ret,double *diff)
 {
  double	r;
 
@@ -508,7 +495,7 @@ STATIC int lmf2q(double *vars,double *idvs,double *ret,double *diff)
  return(0);
 }
 
-STATIC int lmf2s(double *vars,double *idvs,double *ret,double *diff)
+int lmf2s(double *vars,double *idvs,double *ret,double *diff)
 {
  double	r;
 
@@ -532,27 +519,5 @@ STATIC int lmf2s(double *vars,double *idvs,double *ret,double *diff)
  return(0);
 }
 
-
-/* lfitfunction mttr [] = */
-/*  { */
-/*         { "mttr_flux", LFITFUNCTION_DIFFERENTIABLE,  6, 1, mttr_funct_flux 	}, */
-/*         { "mttr1u",    LFITFUNCTION_DIFFERENTIABLE,  3, 0, lmf1u 	}, */
-/*         { "mttr1l",    LFITFUNCTION_DIFFERENTIABLE,  3, 1, lmf1l 	}, */
-/*         { "mttr1s",    LFITFUNCTION_DIFFERENTIABLE,  3, 1, lmf1s 	}, */
-/*         { "mttr1q",    LFITFUNCTION_DIFFERENTIABLE,  3, 2, lmf1q 	}, */
-/*         { "mttr2u",    LFITFUNCTION_DIFFERENTIABLE,  6, 0, lmf2u 	}, */
-/*         { "mttr2l",    LFITFUNCTION_DIFFERENTIABLE,  6, 1, lmf2l 	}, */
-/*         { "mttr2s",    LFITFUNCTION_DIFFERENTIABLE,  6, 1, lmf2s 	}, */
-/*         { "mttr2q",    LFITFUNCTION_DIFFERENTIABLE,  6, 2, lmf2q 	}, */
-/* 	{ NULL, 0, 0, 0, NULL } */
-/*  }; */
-
-#else
-int main(int argc,char *argv[])
-{
- return(0);
-}
-#endif
-
-/*****************************************************************************/
-             
+          
+#endif // #if !defined(_mttr_h)

@@ -1,3 +1,6 @@
+#ifndef _N_BODY_LC
+#define _N_BODY_LC
+
 /*
   n_body_lc.cpp
 
@@ -13,41 +16,51 @@
 
 */
 
-#include <time.h>
-#include <stdlib.h>
-#include <math.h>
+// pos is NX3 matrix of coordinates for N bodies.  radii is length N array of object radii. 
+// u1,u2 are length N arrays of quadratic limb-darkening coefficients. fl is length N array of
+// relative flux contributions (fraction of total flux).  Is is assumed that sum(fl) = 1. 
+//
+
+#include <ctime>
+#include <cstdlib>
+#include <cmath>
 #include <iostream>
-#include "icirc.h"
+
+#include "n_body_state.h"
 #include "n_body_lc.h"
+#include "icirc.h"
+#include "mttr.h"
 
 #define PMAX	20 // Maximum number of bodies, for memory use.
 #define ZPERS	1  // Observer perspective along z direction (-1 @ -z, 1 @ z)
 
-double mttr_flux_general(circle *circles,int ncircle,double c0,double c1,double c2); //A. Pal's code
+double occultn(double ** pos, double * radii, double * u1, double * u2, double * fl, int N);
 
-using namespace std;
+
+/*****************************************************************************/
+/*****************************************************************************/
 
 void comb_sort(double ** pos, int input[], int size) {  // Quick comb sort to order bodies by z coordinate.
-    int swap;
-    int gap = size;
-    bool swapped = false;
- 
-    while ((gap > 1) || swapped) {
-        if (gap > 1) {
-            gap = (int)((double)gap / 1.247330950103979);
-        }
- 
-        swapped = false;
- 
-        for (int i = 0; gap + i < size; ++i) {
-	  if ((pos[input[i]][2] - pos[input[i + gap]][2])*ZPERS > 0) {
-                swap = input[i];
-                input[i] = input[i + gap];
-                input[i + gap] = swap;
-                swapped = true;
-            }
-        }
+  int swap;
+  int gap = size;
+  bool swapped = false;
+
+  while ((gap > 1) || swapped) {
+    if (gap > 1) {
+        gap = (int)((double)gap / 1.247330950103979);
     }
+
+    swapped = false;
+
+    for (int i = 0; gap + i < size; ++i) {
+      if ((pos[input[i]][2] - pos[input[i + gap]][2])*ZPERS > 0) {
+        swap = input[i];
+        input[i] = input[i + gap];
+        input[i + gap] = swap;
+        swapped = true;
+      }
+    }
+  }
 }
 
 int uniq(int pairs[][2],int count, int uniq[]) {
@@ -84,8 +97,8 @@ double occultn(double ** pos, double * radii, double * u1, double * u2, double *
 	     (pos[i][1]-pos[j][1])*(pos[i][1]-pos[j][1]));
       rij = (radii[i]+radii[j]);
       if (zij < rij*rij) {
-	pairs[count][0] = i;
-	pairs[count++][1] = j;
+        pairs[count][0] = i;
+        pairs[count++][1] = j;
       }
     }
   }
@@ -117,9 +130,9 @@ double occultn(double ** pos, double * radii, double * u1, double * u2, double *
       y0 = (circles+i)[0].y0;
       for (j = 0; j < cn-i; j++) { //compute hierarchy of overlaps.
 	
-	(circles+i+j)[0].x0 = ((circles+i+j)[0].x0-x0)/rad;
-	(circles+i+j)[0].y0 = ((circles+i+j)[0].y0-y0)/rad;
-	(circles+i+j)[0].r /= rad;
+        (circles+i+j)[0].x0 = ((circles+i+j)[0].x0-x0)/rad;
+        (circles+i+j)[0].y0 = ((circles+i+j)[0].y0-y0)/rad;
+        (circles+i+j)[0].r /= rad;
 	
       }
       mtt = (1-mttr_flux_general((circles+i),cn-i,
@@ -132,3 +145,5 @@ double occultn(double ** pos, double * radii, double * u1, double * u2, double *
 
   return 1-tr;
 }
+
+#endif

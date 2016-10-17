@@ -1,3 +1,6 @@
+#ifndef __SCPOLYINT_H_INCLUDED	
+#define	__SCPOLYINT_H_INCLUDED
+
 /*****************************************************************************/
 /* scpolyint.c								     */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -6,14 +9,17 @@
 /* (c) 2011; Pal, A. (apal@szofi.net)					     */
 /*****************************************************************************/
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <math.h>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
 
-#include "scpolyint.h"
+double scpoly_integrate(double a,double b,double r,double x1,double x2,
+	double **ccoeff,double **scoeff,int pmax,int qmax);
 
 /*****************************************************************************/
+/*****************************************************************************/
+
 
 typedef struct
  {	double	mpq1;
@@ -79,5 +85,4 @@ double scpoly_integrate(double a,double b,double r,double x1,double x2,double **
  return(ret);
 }
 
-/*****************************************************************************/
-                                                           
+#endif // #ifndef __SCPOLYINT_H_INCLUDED	

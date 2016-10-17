@@ -1,3 +1,6 @@
+#ifndef	__ELLIPTIC_H_INCLUDED
+#define	__ELLIPTIC_H_INCLUDED
+
 /*****************************************************************************/
 /* elliptic.c								     */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -7,16 +10,28 @@
 /* Based on the implementation of Numerical Recipes (Press et al. 1992)	     */
 /*****************************************************************************/
 
-#include <stdio.h>
-#include <math.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
 
-#include "elliptic.h"
+double	carlson_elliptic_rc(double x,double y);
+double	carlson_elliptic_rf(double x,double y,double z);
+double	carlson_elliptic_rd(double x,double y,double z);
+double	carlson_elliptic_rj(double x,double y,double z,double p);
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+double	elliptic_complete_first(double k);
+double	elliptic_complete_second(double k);
+double	elliptic_complete_third(double n,double k);
+
+double	elliptic_incomplete_first (double sx,double k);
+double	elliptic_incomplete_second(double sx,double k);
+double	elliptic_incomplete_third (double sx,double n,double k);
 
 /*****************************************************************************/
+/*****************************************************************************/
 
-#define		FMIN(a,b)	((a)<(b)?(a):(b))
-#define		FMAX(a,b)	((a)<(b)?(a):(b))
 #define		SQR(a)		((a)*(a))
 
 #define C1 0.3
@@ -153,8 +168,8 @@ double carlson_elliptic_rj(double x,double y,double z,double p)
 	a=b=rcx=0.0;
   }
  else
-  {	xt=FMIN(FMIN(x,y),z);
-	zt=FMAX(FMAX(x,y),z);
+  {	xt = std::min( std::min(x,y),z);
+	zt = std::max(std::max(x,y),z);
 	yt=x+y+z-xt-zt;
 	a=1.0/(yt-p);
 	b=a*(zt-yt)*(yt-xt);
@@ -206,8 +221,6 @@ double carlson_elliptic_rj(double x,double y,double z,double p)
 #undef	C7
 
 #undef			SQR
-#undef			FMAX
-#undef			FMIN
 
 /*****************************************************************************/
 
@@ -281,5 +294,4 @@ double elliptic_incomplete_third(double sx,double en,double ak)
  return(sx*carlson_elliptic_rf(c2x,1.0-p2,1.0)+en*sx*s2x*carlson_elliptic_rj(c2x,1.0-p2,1.0,1.0-en*s2x)/3.0);
 }
 
-/*****************************************************************************/
-                                         
+#endif // #ifndef	__ELLIPTIC_H_INCLUDED

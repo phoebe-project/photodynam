@@ -1,18 +1,20 @@
-#ifndef _kepcart_c
-#define _kepcart_c
-#include <string.h>
-#include <stdio.h>
-#include <math.h>
+#ifndef _kepcart_h
+#define _kepcart_h
+
+#include <cstring>
+#include <cstdio>
+#include <cmath>
+#include <limits>
+
 #define MAX_CART_ITER 100
 
-typedef struct {
+struct State {
   double x, y, z, xd, yd, zd;
-} State;
+};
 
-extern double machine_epsilon;
-
-void keplerian(double gm, State state, 
-	  double *a, double *e, double *i, double *longnode, double *argperi, double *meananom)
+void keplerian(
+  double gm, State state, 
+  double *a, double *e, double *i, double *longnode, double *argperi, double *meananom)
 {
   double rxv_x, rxv_y, rxv_z, hs, h, parameter;
   double e_x, e_y, e_z;
@@ -141,24 +143,27 @@ void keplerian(double gm, State state,
   printf("ecosw: %le %le\n", ecosargperi, *e * cos(*argperi));
   printf("argperi: %le %le\n", *argperi, atan2(esinargperi, ecosargperi));*/
 
-
-  return;
 }
 
 
 
-void cartesian(double gm, 
-	       double a, double e, double i, double longnode, double argperi, double meananom, 
-	       State *state, int * icount)
+void cartesian(
+  double gm, 
+	double a, double e, double i, double longnode, double argperi, double meananom, 
+	State *state, int * icount)
 {
   double meanmotion, cosE, sinE, foo;
   double x, y, z, xd, yd, zd;
   double xp, yp, zp, xdp, ydp, zdp;
   double cosw, sinw, cosi, sini, cosnode, sinnode;
   double E0, E1, E2, den;
+  
+  const double machine_epsilon = std::numeric_limits<double>::epsilon();
+  
   int count;
 
   count=0;
+  
   /* first compute eccentric anomaly */
   E0 = meananom; 
   do {
@@ -221,8 +226,6 @@ void cartesian(double gm,
   state->xd = xd * cosnode - yd * sinnode;
   state->yd = xd * sinnode + yd * cosnode;
   state->zd = zd;
-
-  return;
 }
 
 #endif

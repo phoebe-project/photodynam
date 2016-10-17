@@ -72,16 +72,17 @@
   
 */
 
-#include "n_body_state.h"
-#include "n_body_lc.h"
 #include <iostream>
 #include <iomanip>
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
-#include <math.h>
-#include <stdlib.h>
+#include <cmath>
+#include <cstdlib>
+
+#include "n_body_state.h"
+#include "n_body_lc.h"
 
 using namespace std;
 
@@ -220,7 +221,7 @@ int main(int argc, char * argv[]) {
     cout << "#\n#Begin output from times in " << argv[2] << "." << endl;
     cout << "#";
     
-    for (int i = 0; i < words.size(); i++) {
+    for (int i = 0; i < (int)words.size(); i++) {
       switch ((words[i].c_str())[0]) {
       case 't':cout << "Time" << "\t\t"; break;
       case 'F':cout << "Flux" << "\t\t"; break;
@@ -273,7 +274,7 @@ int main(int argc, char * argv[]) {
     while (in >> input) {
       t = atof(input);
       state(t,maxh,orbit_error,1e-16);
-      for (int i = 0; i < words.size(); i++) {
+      for (int i = 0; i < (int)words.size(); i++) {
 	switch ((words[i].c_str())[0]) {
 	case 't':cout << t << "\t"; break;
 	case 'F':cout << occultn(state.getBaryLT(),radii,u1,u2,flux,N) << "\t"; break;

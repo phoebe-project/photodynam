@@ -1,8 +1,114 @@
+#ifndef _N_BODY_STATE_
+#define _N_BODY_STATE_
+
+/*
+  n_body_state.h
+
+  Josh Carter, 2013
+
+  Class defining NBodyState object.  Calls evolve described in n_body.h and coded in n_body.cpp  
+
+*/
+
+#include <cmath>
+#include <limits>
+
 #include "n_body_state.h"
 #include "n_body.h"
-#include "kepcart.c"
+#include "kepcart.h"
 
-using namespace std;
+class NBodyState {
+  
+ private:
+  double * mass;
+  double * eta;
+  double ** rj; //check on this (jacobian)
+  double ** vj; 
+  double ** aj;
+  double ** rb; // barycentric
+  double ** vb; 
+  double ** rb_lt; // barycentric, lite-time corrected (observer at positive z)
+  double time;
+  int status;
+  int N;
+  
+  void calcEta();
+  
+  void bary_coords(); 
+  double bary_coords_lt(); 
+  void calc_jac(double * a,double * e,double * in,double * o,double * ln,double * m); 
+
+ public:
+  // Constructor 1: initialize NBodyState with Jacobian coordinates
+  NBodyState(double * m, double posj[][3], double velj[][3], int NN, double t0);
+  // Constructor 2: initialize NBodyState with osculating elements for Jacobian coordinates.
+  NBodyState(double * ms, double * a, double * e, double * in, double * o,double * ln, double * m, int NN, double t0);
+ 
+  // Evolution overloaded operator.  t is time to evolve to, H is step size in BS integrator, ORBIT_ERROR is
+  // orbit error tolerance and HLIMIT is minimum step size.
+  // Example, for initialized state NBodyState state;
+  //
+  // state(100,1e-8,1e-16,1e-9); //evolves state to t = 0.
+  double operator() (double t, double H, double ORBIT_ERROR, double HLIMIT);
+
+  // Cruise operator moves according to velocity and acceleration and time t.  Returns new NBodyState.
+  NBodyState * cruise(double t); //v,a time not reset
+
+  // Returns current osculating keplerian elements for state
+  void kep_elements(double * mj, double * a, double * e, double * in, double * o,double * ln, double * m); // return instantaneous keplerian elements
+
+  // Returns mass of object obj
+  double getMass(int obj);
+
+  // Gets current time
+  double getTime();
+
+  // Gets the number of bodies in the state.
+  int getN();
+
+  // Returns NX3 matrix of positions for N objects corrected for the finite speed of light.
+  double ** getBaryLT();
+
+  // Returns barycentric coordinates for object obj.
+  double X_B(int obj);
+  double Y_B(int obj);
+  double Z_B(int obj);
+
+  // Returns barycentric velocities for object obj.
+  double V_X_B(int obj);
+  double V_Y_B(int obj);
+  double V_Z_B(int obj);
+
+  // Returns Jacobian coordinates for object obj.
+  double X_J(int obj);
+  double Y_J(int obj);
+  double Z_J(int obj);
+
+  // Returns Jacobian velocities for object obj.
+  double V_X_J(int obj);
+  double V_Y_J(int obj);
+  double V_Z_J(int obj);
+
+  // Returns barycentric, light-time corrected coordinates for object obj.
+  double X_LT(int obj);
+  double Y_LT(int obj);
+  double Z_LT(int obj);
+
+  // Returns barycentric, light-time corrected velocities for object obj.
+  double V_X_LT(int obj);
+  double V_Y_LT(int obj);
+  double V_Z_LT(int obj);
+
+  // Returns energy
+  double getE();
+
+  // Returns components of total angular momentum
+  void getL(double * lx, double * ly, double * lz);
+  
+  // Destroys the state.
+  ~NBodyState();
+
+};
 
 #define COPYN(a,b) for (int LOOP = 0; LOOP < N; LOOP++) {b[LOOP] = a[LOOP];}
 #define COPYN3(a,b) for (int LOOP = 0; LOOP < N; LOOP++) for (int LOOP2 = 0; LOOP2 < 3; LOOP2++) {b[LOOP][LOOP2] = a[LOOP][LOOP2];}
@@ -14,7 +120,6 @@ using namespace std;
 #define NORM2(r) (r[0]*r[0]+r[1]*r[1]+r[2]*r[2])
 #define NORM_DIFF(r2,r1) (sqrt((r1[0]-r2[0])*(r1[0]-r2[0])+(r1[1]-r2[1])*(r1[1]-r2[1])+(r1[2]-r2[2])*(r1[2]-r2[2]))) 
 
-double machine_epsilon = 1e-18;
 
 NBodyState::NBodyState(double * m, double posj[][3], double velj[][3], int NN,double t0) {
   N = NN;
@@ -211,8 +316,11 @@ NBodyState * NBodyState::cruise(double t) {
 } 			     
 
 void NBodyState::kep_elements(double * mj, double * a, double * e, double * in, double * o, double * ln, double * m) {
+  
   State kep_state;
+  
   double a_,e_,in_,o_,ln_,m_;
+  
   for (int i = 1; i < N; i++) {
     kep_state.x = rj[i][0];
     kep_state.y = rj[i][1];
@@ -280,11 +388,5 @@ void NBodyState::getL(double * lx, double * ly, double * lz) {
     *lz += mass[i]*(rb[i][0]*vb[i][1]-rb[i][1]*vb[i][0]);
   }
 }
-    
-  
 
-    
-    
-    
-
-    
+#endif
