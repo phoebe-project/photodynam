@@ -26,8 +26,6 @@
 #include <cmath>
 #include <iostream>
 
-#include "n_body_state.h"
-#include "n_body_lc.h"
 #include "icirc.h"
 #include "mttr.h"
 

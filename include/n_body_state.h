@@ -286,10 +286,11 @@ void NBodyState::calc_jac(double * a, double * e, double * in, double * o, doubl
 
 //Evolution operator -> () overloaded. t is integration time, H is max step.
 double NBodyState::operator() (double t, double H, double ORBIT_ERROR, double HLIMIT) {
-  evolve(rj,vj,aj,mass,eta,N,time,t,H,status,ORBIT_ERROR,HLIMIT); time = t;
+  
+  evolve(rj,vj,aj,mass,eta,N,time,t,H,status,ORBIT_ERROR,HLIMIT); 
+  time = t;
   bary_coords();
- 
-  double dtMax = bary_coords_lt();
+  bary_coords_lt();
 
   return status;
 }

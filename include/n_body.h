@@ -13,8 +13,6 @@
 #include <cstdlib>
 #include <cmath>
 
-#include "n_body.h"
-
 // r, v, a are NX3 matricies of coordinates, velocities and accelerations at starting state (at time0) and are 
 // overwritten by evolved values (at time).  Accelerations are obviously irrelevant in describing the starting state.
 // HMAX is maximum step, status is integral status value (1 is failure), ORBIT_ERROR is orbit error and HLIMIT
