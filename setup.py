@@ -1,4 +1,5 @@
-from numpy.distutils.core import setup, Extension
+from setuptools import Extension, setup
+import numpy
 
 # Set to true if you want to link against electric fence:
 CDEBUG = False
@@ -8,14 +9,14 @@ if CDEBUG:
     libraries += ['efence']
 
 ext_modules = [
-    Extension('photodynam',
-      sources = ['./pywrapper/libphotodynam.cpp'],
-      extra_compile_args = ["-std=c++11", "-I./include"]),
+    Extension(
+        'photodynam',
+        sources=[
+            './pywrapper/libphotodynam.cpp'
+        ],
+        extra_compile_args=["-std=c++11", "-I./include"],
+        include_dirs=[numpy.get_include()]
+    ),
 ]
 
-setup (name = 'photodynam',
-       version = 'devel',
-       description = "python wrapper of a modified version of Josh Carter's photodynam",
-       packages = [],
-       install_requires=['numpy'],
-       ext_modules = ext_modules)
+setup(ext_modules=ext_modules)
