@@ -37,6 +37,6 @@ jobs:
       run: |
         python -c "import photodynam"
 
-    # - name: Run tests
-    #   run: |
-    #     pytest --verbose --capture=no tests/tests/
+    - name: Run tests
+      run: |
+        pytest --verbose --capture=no tests/
