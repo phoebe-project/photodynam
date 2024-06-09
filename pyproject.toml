@@ -1,0 +1,64 @@
+# photodynam build specification
+# 
+# Refer to the following document for specification:
+#   https://packaging.python.org/en/latest/specifications/
+# 
+# Key specification is given here:
+#   https://packaging.python.org/en/latest/specifications/declaring-project-metadata/#declaring-project-metadata
+# 
+# Classifier strings are given here:
+#   https://pypi.org/classifiers/
+
+[project]
+name = "photodynam"
+version = "1.0"
+description = "Adapted and pythonized version of Josh Carter's photodynam code"
+readme = "README.md"
+requires-python = ">=3.7"
+license = { text = "GPL-3.0-or-later" }
+authors = [
+    { name = "Josh Carter", email = "josh.a.carter@gmail.com" },
+    { name = "Kyle Conroy", email = "kyleconroy@gmail.com" },
+    { name = "Martin Horvat", email = "horvat77@gmail.com" },
+]
+maintainers = [
+    { name = "Andrej Prša", email = "aprsa@villanova.edu" },
+]
+keywords = [
+    "mathematics",
+    "science",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: C++",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "numpy", "pytest"
+]
+
+[project.urls]
+repository = "https://github.com/phoebe-project/photodynam"
+
+[build-system]
+requires = ["setuptools", "numpy", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = [
+    "photodynam",
+]
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib",
+]
